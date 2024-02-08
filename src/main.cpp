@@ -1,18 +1,32 @@
-#include <Arduino.h>
+#include "Setup.h"
+float scale1_factor=-190.636/265;
+float scale2_factor=-188.128/265;
+Scale  scale1(2,3,scale1_factor);
+Scale  scale2(4,5,scale2_factor);
+unsigned int time0;
 
-// put function declarations here:
-int myFunction(int, int);
+
+float xd(float t){
+  return cos(t);
+}
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  Serial.begin(9600);
+  scale1.initScale();
+  scale2.initScale();
+  initPump();
+  time0=millis();
 }
-
+float integral=0;//initial value
+#define LOOP_TIME 0.02
 void loop() {
-  // put your main code here, to run repeatedly:
-}
+  unsigned int t=millis()-time0;
+  float  t_sec=(float) t/1000;
+  //Example use of Euler Method
+  integral+=EulerIntegrator(LOOP_TIME,xd(t_sec));
+  Serial.print(xd(t_sec));
+  Serial.print("\t");
+  Serial.println(integral);
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+  delay(20);
 }
