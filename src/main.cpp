@@ -1,4 +1,6 @@
 #include "Setup.h"
+
+#define LOOP_TIME 0.02
 float scale1_factor=-190.636/265;
 float scale2_factor=-188.128/265;
 Scale  scale1(2,3,scale1_factor);
@@ -18,7 +20,6 @@ void setup() {
   time0=millis();
 }
 float integral=0;//initial value
-#define LOOP_TIME 0.02
 void loop() {
   unsigned int t=millis()-time0;
   float  t_sec=(float) t/1000;
@@ -28,5 +29,5 @@ void loop() {
   Serial.print("\t");
   Serial.println(integral);
 
-  delay(20);
+  delay(LOOP_TIME*1000);
 }
