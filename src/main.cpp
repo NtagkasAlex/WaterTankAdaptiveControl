@@ -32,7 +32,7 @@ void loop() {
   float h1=Scale2Height(LoadCell_1.getData());
   float h2=Scale2Height(LoadCell_2.getData());
   printHeights(h1,h2);
-  
+
   float e2=h2-h2d;
   float h1d=1/(a1_hat*a1_hat*2*g)*pow((a2_hat*f(h2)-k2*e2),2);
 
@@ -51,7 +51,7 @@ void loop() {
   float u_bar=(-k1*e1+b7);
   float u=p_hat*u_bar;
   float p_dot=-gamma_beta*u_bar*e1;
-  drivePump(filter(u));
+  drivePump(255);
   //!SECTION ODEs
   a1_hat+=EulerIntegrator(LOOP_TIME,a1_dot);
   a2_hat+=EulerIntegrator(LOOP_TIME,a2_dot);
