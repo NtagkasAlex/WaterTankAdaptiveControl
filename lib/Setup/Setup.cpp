@@ -35,17 +35,12 @@ void initPump()
     pinMode(in2, OUTPUT);
 }
 
-void drivePump(int speed)
+void drivePump(float speed)
 {
     analogWrite(pwm,speed);
-    if(speed>=0){
-        digitalWrite(in1, HIGH);
+    digitalWrite(in1, HIGH);
     digitalWrite(in2, LOW);
-    }
-    else{
-        digitalWrite(in1, LOW);
-        digitalWrite(in2, HIGH);
-    }
+    
 }
 
 float EulerIntegrator(float loop_time, float state_dot)

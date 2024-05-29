@@ -1,4 +1,5 @@
 #include "Setup.h"
+#include "Arduino.h"
 //SECTION Definitions 
 #define LOOP_TIME 0.02
 float scale1_factor=-190.636/265;
@@ -37,12 +38,15 @@ void setup() {
   time0=millis();
 }
 void loop() {
+  // Serial.print("8");
+
   unsigned int t=millis()-time0;
   float  t_sec=(float) t/1000;
 
   float h1=scale1.Scale2Height();
   float h2=scale2.Scale2Height();
-
+  float h1=2;
+  float h2=2;
   float e2=h2-h2d;
   float h1d=1/(a1_hat*a1_hat*2*g)*pow((a2_hat*f(h2)-k2*e2),2);
 
@@ -61,7 +65,6 @@ void loop() {
   float u_bar=(-k1*e1+b7);
   float u=p_hat*u_bar;
   float p_dot=-gamma_beta*u_bar*e1;
-
   drivePump(filter(u));
   //!SECTION ODEs
   a1_hat+=EulerIntegrator(LOOP_TIME,a1_dot);
@@ -106,5 +109,5 @@ float der_proj_fun(float x,float e,float x_max){
 //Somehow Filter the u of the controler 
 // to feed it to the pump
 int filter(float u){
-  return 1;
+  return 255/9*(u-5);
 }

@@ -21,5 +21,5 @@ const int in1=7;
 const int in2=8;
 
 void initPump();
-void drivePump(int speed);
+void drivePump(float speed);
 float EulerIntegrator(float loop_time,float state_dot);
