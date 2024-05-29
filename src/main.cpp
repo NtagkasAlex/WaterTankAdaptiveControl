@@ -1,39 +1,24 @@
 #include "Setup.h"
 #include "Arduino.h"
+#include "definitions.h"
 //SECTION Definitions 
 #define LOOP_TIME 0.02
-float scale1_factor=-190.636/265;
-float scale2_factor=-188.128/265;
-Scale  scale1(2,3,scale1_factor);
-Scale  scale2(4,5,scale2_factor);
-unsigned int time0;
-float  f(float x);
-float f_dot(float x);
-float projection(float x, float y);
-float proj_fun(float x, float e, float x_max);
-float der_proj_fun(float x, float e, float x_max);
 
-int filter(float u);
-
-// SECTION Simulation Constants
-float g=9.81;
-float k2=1;
-float k1=1000;
-float gamma1=100;
-float gamma2=100;
-float gamma_beta=100;
-
-float h2d=0.05; // in Metres
-//SECTION - Initialazation
-float a1_hat=0.5;
-float    a2_hat=0.5;
-float p_hat=0.5;
-
-
+void printHeights(float h1,float h2);
 void setup() {
-  Serial.begin(9600);
-  scale1.initScale();
-  scale2.initScale();
+  Serial.begin(57600);
+  Serial.println();
+  Serial.println("Starting...");
+
+  LoadCell_1.begin();
+  LoadCell_2.begin();
+
+  LoadCell_1.tare();
+  LoadCell_2.tare();
+  
+  LoadCell_1.setCalFactor(calibrationValue_1);
+  LoadCell_2.setCalFactor(calibrationValue_2);
+  delay(1000);
   initPump();
   time0=millis();
 }
@@ -42,11 +27,12 @@ void loop() {
 
   unsigned int t=millis()-time0;
   float  t_sec=(float) t/1000;
-
-  float h1=scale1.Scale2Height();
-  float h2=scale2.Scale2Height();
-  float h1=2;
-  float h2=2;
+  LoadCell_1.update();
+  LoadCell_2.update();
+  float h1=Scale2Height(LoadCell_1.getData());
+  float h2=Scale2Height(LoadCell_2.getData());
+  printHeights(h1,h2);
+  
   float e2=h2-h2d;
   float h1d=1/(a1_hat*a1_hat*2*g)*pow((a2_hat*f(h2)-k2*e2),2);
 
@@ -105,9 +91,22 @@ float proj_fun(float x,float e,float x_max){
 float der_proj_fun(float x,float e,float x_max){
     return 2*x/(e*x_max*x_max);
 }
-
+void printHeights(float h1,float h2){
+  Serial.print("h1: ");
+  Serial.print(h1);
+  Serial.print("  h2: ");
+  Serial.println(h2);
+}
 //Somehow Filter the u of the controler 
 // to feed it to the pump
 int filter(float u){
   return 255/9*(u-5);
+}
+float Scale2Height(float weight)
+{
+    float r=3.75;//Radius of base in cm
+    float A=M_PI*r*r;//Base Surface in cm^2f
+    float rho =1 ;// density of water in g/cm^3
+    float h= weight/(rho*A);//in cm
+    return h/100;//in meters
 }
