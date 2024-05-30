@@ -14,6 +14,15 @@ float der_proj_fun(float x, float e, float x_max);
 float Scale2Height(float weight);
 int filter(float u);
 
+const int pwm=6;
+const int in1=7;
+const int in2=8;
+
+void initPump();
+void drivePump(float speed);
+float EulerIntegrator(float loop_time,float state_dot);
+
+
 // SECTION Simulation Constants
 float g=9.81;
 float k2=1;
