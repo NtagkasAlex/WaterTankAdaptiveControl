@@ -14,7 +14,11 @@ void setup() {
 
   LoadCell_1.tare();
   LoadCell_2.tare();
-  
+  // Serial.println(LoadCell_1.getTareOffset());
+  // Serial.println(LoadCell_2.getTareOffset());
+  LoadCell_1.setTareOffset(TareOffeset_1);
+  LoadCell_2.setTareOffset(TareOffeset_2);
+
   LoadCell_1.setCalFactor(calibrationValue_1);
   LoadCell_2.setCalFactor(calibrationValue_2);
   delay(1000);
@@ -50,7 +54,8 @@ void loop() {
   float u_bar=(-k1*e1+b7);
   float u=p_hat*u_bar;
   float p_dot=-gamma_beta*u_bar*e1;
-  drivePump(255);
+  drivePump(filter(u));
+  
   //!SECTION ODEs
   a1_hat+=EulerIntegrator(LOOP_TIME,a1_dot);
   a2_hat+=EulerIntegrator(LOOP_TIME,a2_dot);
@@ -91,23 +96,24 @@ float der_proj_fun(float x,float e,float x_max){
     return 2*x/(e*x_max*x_max);
 }
 void printHeights(float h1,float h2){
-  Serial.print("h1: ");
-  Serial.print(h1);
-  Serial.print("  h2: ");
-  Serial.println(h2);
+  Serial.print("h1 in cm: ");
+  Serial.print(h1*100.,6);
+  Serial.print("  h2 in cm: ");
+  Serial.println(h2*100.,6);
 }
 //Somehow Filter the u of the controler 
 // to feed it to the pump
 int filter(float u){
-  return 255/9*(u-5);
+  float u_max=7;
+  return 255/u_max*(u-5);
 }
 float Scale2Height(float weight)
 {
     float r=3.75;//Radius of base in cm
     float A=M_PI*r*r;//Base Surface in cm^2f
-    float rho =1 ;// density of water in g/cm^3
+    float rho =1. ;// density of water in g/cm^3
     float h= weight/(rho*A);//in cm
-    return h/100;//in meters
+    return h/100.;//in meters
 }
 
 void initPump()

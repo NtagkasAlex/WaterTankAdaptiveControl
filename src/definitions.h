@@ -2,8 +2,11 @@
 
 HX711_ADC LoadCell_1(2,3); //HX711 1
 HX711_ADC LoadCell_2(4,5); //HX711 2
-float calibrationValue_1=696.0; // calibration value load cell 1
-float calibrationValue_2=703.; // calibration value load cell 2
+float calibrationValue_1=702.46; // calibration value load cell 1
+float calibrationValue_2=-369.88; // calibration value load cell 2
+
+float TareOffeset_1=8505397; // calibration value load cell 1
+float TareOffeset_2=8293462; // calibration 
 
 unsigned int time0;
 float  f(float x);
