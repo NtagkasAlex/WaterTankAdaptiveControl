@@ -7,6 +7,8 @@ float calibrationValue_1=-732.42; // calibration value load cell 2
 
 float TareOffeset_2=8516111; // calibration value load cell 1
 float TareOffeset_1=8219669; // calibration 
+ 
+
 
 unsigned int time0;
 float  f(float x);
@@ -26,17 +28,14 @@ void drivePump(float speed);
 float EulerIntegrator(float loop_time,float state_dot);
 
 float u_max=14;
-// SECTION Simulation Constants
+// SECTION Simulation Constants feedback linearization
 float g=9.81;
-float k2=1;
-float k1=5000;
-float constant=1e-3;
-float gamma1=constant;
-float gamma2=constant;
-float gamma_beta=constant;
-
-float h2d=0.12; // in Metres
-//SECTION - Initialazation
-float a1_hat=0.1;
-float a2_hat=0.1;
-float p_hat=0.1;
+float gamma=0.01;
+int k1=200;// //initialize gains k1 and k2 if those changed we need to recalculate the P matrix via matlab and lyap function
+int k2=10;
+float a1_hat=1;
+float a2_hat=1;
+float b_hat=1;
+float xm1=0.096;
+float xm2=0.0;
+float store_u=6.9;

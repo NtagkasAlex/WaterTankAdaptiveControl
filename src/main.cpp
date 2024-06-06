@@ -22,67 +22,100 @@ void setup() {
   LoadCell_1.setCalFactor(calibrationValue_1);
   LoadCell_2.setCalFactor(calibrationValue_2);
   initPump();
-  drivePump(filter(7));
+
+   drivePump(filter(7));
   Serial.println("Start : ");
-  delay(10000);
+  // delay(10000);
   Serial.println("10 sec");
-  delay(10000);
+  // delay(10000);
   // Serial.println("Done");
   time0=millis();
 }
-int count=0;
 void loop() {
   // Serial.print("8");
-  count+=1;
+
   unsigned int t=millis()-time0;
   float  t_sec=(float) t/1000;
   LoadCell_1.update();
   LoadCell_2.update();
+  //values of h1,h2 are given from sensors
   float h1=Scale2Height(LoadCell_1.getData());
   float h2=Scale2Height(LoadCell_2.getData());
-  if (h1 <=0) {
-    h1=0.00001;}
-  if (h2 <=0){ 
-    h2=0.0001;
-  }
-  
-  float e2=h2-h2d;
-  float h1d=1/(a1_hat*a1_hat*2*g)*pow((a2_hat*f(h2)-k2*e2),2);
-
-  float e1=h1-h1d;
-  float b1=e2*a1_hat*f(h1)-e2*a2_hat*f(h2);
-  float b2=2/(pow(a1_hat,3)*2*g)*pow((a2_hat*f(h2)-k2*e2),2);
-  float b3=2/(a1_hat*a1_hat*2*g)*(a2_hat*f(h2)-k2*e2)*f(h2);
-  float b4=2/(a1_hat*a1_hat*2*g)*(a2_hat*f(h2)-k2*e2)*(a2_hat*f_dot(h2)-k2);
-  
-  float a1_dot=gamma1*projection(a1_hat,(e2-e1*b4-e1)*f(h1));
-  float a2_dot=gamma2*(-e2+e1*b4)*f(h2);
-
-  float b5=-b2*a1_dot+b3*a2_dot;
-  float b6=b4*a1_hat*f(h1)-b4*a2_hat*f(h2);
-  float b7=a1_hat*f(h1)+b5+b6;
-  float u_bar=(-k1*e1+b7);
-  float u=p_hat*u_bar;
-  float p_dot=-gamma_beta*u_bar*e1;
-  if (u<=0)
-    u=0;
-  if (u>=u_max){u=u_max;}
-  drivePump(filter(u));
   // printHeights(h1,h2);
-  if (count%50==0){
-    // Serial.print("  ");
-    Serial.print(h1,6);
-    Serial.print("  ");
-    Serial.print(h2,6);
-    Serial.print("  ");  
-    Serial.println(u);
-    // Serial.println("  ");
-  }
+
+  //stef
   
+  //initialize P that we found from matlab with lyap
+  // float P[2][2]={{5.06,0.001},
+  //               {0.001,0.01}
+  //               };
+  float p1=10.075;
+  float p2=0.0025;
+  float p3=0.0025;
+  float p4=0.0503;
+
+                
+  //initialize B' matrix
+  // float B[3][2]={
+  //       {f(h1),-f(h1)*(a1_hat*f_dot(h1)+a2_hat*f_dot(h2))},
+  //       {-f(h2),a2_hat*f_dot(h2)*f(h2)},
+  //       {0,keep_u/b_hat}
+  //       };
+
+  float b1=f(h1);
+  float b2=-f(h2);
+  float b3=0;
+  float b4=-f(h1)*(a1_hat*f_dot(h1)+a2_hat*f_dot(h2));
+  float b5=a2_hat*f_dot(h2)*f(h2);
+  float b6=store_u/b_hat;
+
+  //transformed model
+  float psi1=h2;
+  float psi2=a1_hat*f(h1)-a2_hat*f(h2);
+
+  //define error psi-xm, xm is the reference model
+  float e1=psi1-xm1;
+  float e2=psi2-xm2;
+
+  //adaptation law for parameters 
+  float a1_dot=gamma*projection(a1_hat,(b1*p1+b4*p3)*e1+(B1*p2+b4*p4)*e2);
+  float a2_dot=gamma*projection(a1_hat,(b2*p1+b5*p3)*e1+(b2*p2+b5*p4)*e2);
+  float b_dot=gamma*projection(a1_hat,(b3*p1+b6*p3)*e1+(b3*p2+b6*p4)*e2);
+
+  //here we add desired height
+  float h2_desired=0.12;
+  float v=k1*h2_desired;
+
+  //input control needs a1_dot and beta_dot
+  float u=(-a1_dot*f(h1) + (a1_hat*a1_hat) * f(h1) * f_dot(h1) + a2_dot*f(h2) + a2_hat * f_dot(h2)*(a1_hat*f(h1)+a2_hat*f(h2)) + v - k1*psi1 - k2*psi2)/(a1_hat*b_hat*f_dot(h1));
+
+  //we store u ecause we use it at B matrix
+  store_u=u;
+  if (u>=u_max){
+    u=u_max;
+  }
+  drivePump(filter(u));
+  Serial.print(h1,6);
+  Serial.print(" ");
+  Serial.print(h2,6);
+  Serial.print(" ");
+  Serial.print(u,6);
+  Serial.print(" ");
+  Serial.print(a1_hat,6);
+  Serial.print(" ");
+  Serial.print(a2_hat,6);
+  Serial.print(" ");
+  Serial.println(b_hat,6);
+
+  //finally we create the dynamics for reference model
+  float xm1_dot=xm2;
+  float xm2_dot=-k1*xm1-k2*xm2+k1*h2_desired;
   //!SECTION ODEs
   a1_hat+=EulerIntegrator(LOOP_TIME,a1_dot);
   a2_hat+=EulerIntegrator(LOOP_TIME,a2_dot);
-  p_hat+=EulerIntegrator(LOOP_TIME,p_dot);
+  b_hat+=EulerIntegrator(LOOP_TIME,b_dot);
+  xm1+=EulerIntegrator(LOOP_TIME,xm1_dot);
+  xm2+=EulerIntegrator(LOOP_TIME,xm2_dot);
 
 
   delay(LOOP_TIME*1000);
@@ -127,8 +160,7 @@ void printHeights(float h1,float h2){
 //Somehow Filter the u of the controler 
 // to feed it to the pump
 int filter(float u){
-  if (u<=5)
-    return 0;
+  if (u<=5){return 0;}
   return 255/(u_max-5)*(u-5);
 }
 float Scale2Height(float weight)
