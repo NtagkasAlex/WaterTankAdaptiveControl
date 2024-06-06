@@ -21,21 +21,31 @@ void setup() {
 
   LoadCell_1.setCalFactor(calibrationValue_1);
   LoadCell_2.setCalFactor(calibrationValue_2);
-  delay(1000);
   initPump();
+  drivePump(filter(7));
+  Serial.println("Start : ");
+  // delay(10000);
+  Serial.println("10 sec");
+  // delay(10000);
+  // Serial.println("Done");
   time0=millis();
 }
+int count=0;
 void loop() {
   // Serial.print("8");
-
+  count+=1;
   unsigned int t=millis()-time0;
   float  t_sec=(float) t/1000;
   LoadCell_1.update();
   LoadCell_2.update();
   float h1=Scale2Height(LoadCell_1.getData());
   float h2=Scale2Height(LoadCell_2.getData());
-  printHeights(h1,h2);
-
+  if (h1 <=0) {
+    h1=0.00001;}
+  if (h2 <=0){ 
+    h2=0.0001;
+  }
+  
   float e2=h2-h2d;
   float h1d=1/(a1_hat*a1_hat*2*g)*pow((a2_hat*f(h2)-k2*e2),2);
 
@@ -54,7 +64,19 @@ void loop() {
   float u_bar=(-k1*e1+b7);
   float u=p_hat*u_bar;
   float p_dot=-gamma_beta*u_bar*e1;
+  if (u<=0)
+    u=0;
   drivePump(filter(u));
+  // printHeights(h1,h2);
+  if (count%50==0){
+    // Serial.print("  ");
+    Serial.print(h1,6);
+    Serial.print("  ");
+    Serial.print(h2,6);
+    Serial.print("  ");  
+    Serial.println(u);
+    // Serial.println("  ");
+  }
   
   //!SECTION ODEs
   a1_hat+=EulerIntegrator(LOOP_TIME,a1_dot);
@@ -104,8 +126,10 @@ void printHeights(float h1,float h2){
 //Somehow Filter the u of the controler 
 // to feed it to the pump
 int filter(float u){
-  float u_max=7;
-  return 255/u_max*(u-5);
+  float u_max=13;
+  if (u<=5)
+    return 0;
+  return 255/(u_max-5)*(u-5);
 }
 float Scale2Height(float weight)
 {
