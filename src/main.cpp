@@ -25,9 +25,9 @@ void setup() {
 
    drivePump(filter(7));
   Serial.println("Start : ");
-  // delay(10000);
+  delay(10000);
   Serial.println("10 sec");
-  // delay(10000);
+  delay(10000);
   // Serial.println("Done");
   time0=millis();
 }
