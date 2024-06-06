@@ -26,17 +26,48 @@ void drivePump(float speed);
 float EulerIntegrator(float loop_time,float state_dot);
 
 float u_max=14;
-// SECTION Simulation Constants
-float g=9.81;
-float k2=1;
-float k1=5000;
-float constant=1e-3;
-float gamma1=constant;
-float gamma2=constant;
-float gamma_beta=constant;
 
-float h2d=0.12; // in Metres
-//SECTION - Initialazation
-float a1_hat=0.1;
-float a2_hat=0.1;
-float p_hat=0.1;
+
+float g=9.81;
+
+float am1 = 0.1;
+float am0 = 0.01;
+
+float gamma = 100;  //100
+
+float r = 0.12;  //0.1
+
+float yp = 0;  //
+float yp_dot = 0;
+//float yp_ddot = 0;  //
+
+// float h2 = 0;  //
+
+float ym = 0.1;  //
+float ym_dot = 0;
+float ym_ddot = 0;
+
+float e = 0;
+
+float g1 = 0;
+float g1_dot = 0;
+float g1_ddot = 0;
+
+float g2 = 0;
+float g2_dot = 0;
+float g2_ddot = 0;
+
+float g3 = 0;
+float g3_dot = 0;
+float g3_ddot = 0;
+
+float theta1 = 0;
+float theta1_dot = 0;
+
+float theta2 = 0;
+float theta2_dot = 0;
+
+float theta3 = 0;
+float theta3_dot = 0;
+
+float u = 0;

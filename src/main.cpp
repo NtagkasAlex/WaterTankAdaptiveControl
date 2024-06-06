@@ -46,24 +46,41 @@ void loop() {
     h2=0.0001;
   }
   
-  float e2=h2-h2d;
-  float h1d=1/(a1_hat*a1_hat*2*g)*pow((a2_hat*f(h2)-k2*e2),2);
+  yp = h2;//plant dynamics
 
-  float e1=h1-h1d;
-  float b1=e2*a1_hat*f(h1)-e2*a2_hat*f(h2);
-  float b2=2/(pow(a1_hat,3)*2*g)*pow((a2_hat*f(h2)-k2*e2),2);
-  float b3=2/(a1_hat*a1_hat*2*g)*(a2_hat*f(h2)-k2*e2)*f(h2);
-  float b4=2/(a1_hat*a1_hat*2*g)*(a2_hat*f(h2)-k2*e2)*(a2_hat*f_dot(h2)-k2);
-  
-  float a1_dot=gamma1*projection(a1_hat,(e2-e1*b4-e1)*f(h1));
-  float a2_dot=gamma2*(-e2+e1*b4)*f(h2);
+  yp_dot = (h2 - yp) / LOOP_TIME;  //before or after the following line?(probably no difference longterm)
+                    
+  //reference model
+  ym_ddot = -am1 * ym_dot - am0 * ym + am0 * r;  //am0=bm
+  ym_dot +=EulerIntegrator(LOOP_TIME,ym_ddot);         // new ym_dot                          euler
+  ym +=EulerIntegrator(LOOP_TIME,ym_dot);                        // new ym                              euler
 
-  float b5=-b2*a1_dot+b3*a2_dot;
-  float b6=b4*a1_hat*f(h1)-b4*a2_hat*f(h2);
-  float b7=a1_hat*f(h1)+b5+b6;
-  float u_bar=(-k1*e1+b7);
-  float u=p_hat*u_bar;
-  float p_dot=-gamma_beta*u_bar*e1;
+  e = yp - ym;  //new error
+
+  g1_ddot = -am1 * g1_dot - am0 * g1 + am0 * r;
+  g1_dot +=EulerIntegrator(LOOP_TIME,g1_ddot); //new g1_dot                                         euler
+  g1 +=EulerIntegrator(LOOP_TIME,g1_dot);// new g1                                            euler
+
+  g2_ddot = -am1 * g2_dot - am0 * g2 + am0 * yp;
+  g2_dot +=EulerIntegrator(LOOP_TIME,g2_ddot); //new g2_dot                                         euler
+  g2 +=EulerIntegrator(LOOP_TIME,g2_dot);          // new g2                                            euler
+
+  g3_ddot = -am1 * g3_dot - am0 * g3 + am0 * yp_dot;  //                              derivative!
+  g3_dot +=EulerIntegrator(LOOP_TIME,g3_ddot);               //new g3_dot                      euler
+  g3 +=EulerIntegrator(LOOP_TIME,g3_dot);                              // new g3                         euler
+
+  //mit rule
+  theta1_dot = -gamma * g1 * e;
+  theta2_dot = gamma * g2 * e;
+  theta3_dot = gamma * g3 * e;
+
+  theta1 +=EulerIntegrator(LOOP_TIME,theta1_dot);//new theta1                                     euler
+  theta2 +=EulerIntegrator(LOOP_TIME,theta2_dot);  // new theta2                                     euler
+  theta3 +=EulerIntegrator(LOOP_TIME,theta3_dot);  // new theta2                                     euler
+
+  u = theta1 * r - theta2 * yp - theta3 * yp_dot;  //control law                      derivative!
+
+  // Serial.print(u);
   if (u<=0)
     u=0;
   if (u>=u_max){u=u_max;}
@@ -79,10 +96,10 @@ void loop() {
     // Serial.println("  ");
   }
   
-  //!SECTION ODEs
-  a1_hat+=EulerIntegrator(LOOP_TIME,a1_dot);
-  a2_hat+=EulerIntegrator(LOOP_TIME,a2_dot);
-  p_hat+=EulerIntegrator(LOOP_TIME,p_dot);
+  // //!SECTION ODEs
+  // a1_hat+=EulerIntegrator(LOOP_TIME,theta1_dot);
+  // a2_hat+=EulerIntegrator(LOOP_TIME,a2_dot);
+  // p_hat+=EulerIntegrator(LOOP_TIME,p_dot);
 
 
   delay(LOOP_TIME*1000);
