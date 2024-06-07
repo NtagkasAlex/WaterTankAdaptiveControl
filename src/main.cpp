@@ -141,21 +141,33 @@ float f_dot(float x)
       return sqrt(2*g)/(2*sqrt(x));
     }
 }
-float projection(float x,float y,float x_max, float e){
 
-    if (proj_fun(x,e,x_max)>0 && y*der_proj_fun(x,e,x_max)>0){
-        return y*(1-proj_fun(x,e,x_max));
-    }
-    else{
-        return y;
-    }
+float projection(float x,float y,float xmax,float e){
+float f=-(x*x-xmax^2)/(e*xmax^2);
+float df=-2*x/(e*xmax^2);
+if (f>0 && y*df>0){
+    return y-df*df*y*f/(df*df);
 }
-float proj_fun(float x,float e,float x_max){
-  return (x*x-x_max*x_max)/(e*x_max*x_max);
+else{
+    return y;
 }
-float der_proj_fun(float x,float e,float x_max){
-    return 2*x/(e*x_max*x_max);
 }
+
+// float projection(float x,float y,float x_max, float e){
+
+//     if (proj_fun(x,e,x_max)>0 && y*der_proj_fun(x,e,x_max)>0){
+//         return y*(1-proj_fun(x,e,x_max));
+//     }
+//     else{
+//         return y;
+//     }
+// }
+// float proj_fun(float x,float e,float x_max){
+//   return (x*x-x_max*x_max)/(e*x_max*x_max);
+// }
+// float der_proj_fun(float x,float e,float x_max){
+//     return 2*x/(e*x_max*x_max);
+// }
 void printHeights(float h1,float h2){
   Serial.print("h1 in cm: ");
   Serial.print(h1*100.,6);
