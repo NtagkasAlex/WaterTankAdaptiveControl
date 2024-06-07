@@ -31,9 +31,10 @@ void setup() {
   // Serial.println("Done");
   time0=millis();
 }
+int count=0;
 void loop() {
   // Serial.print("8");
-
+  count+=1;
   unsigned int t=millis()-time0;
   float  t_sec=(float) t/1000;
   LoadCell_1.update();
@@ -95,18 +96,23 @@ void loop() {
     u=u_max;
   }
   drivePump(filter(u));
-  Serial.print(h1,6);
-  Serial.print(" ");
-  Serial.print(h2,6);
-  Serial.print(" ");
-  Serial.print(u,6);
-  Serial.print(" ");
-  Serial.print(a1_hat,6);
-  Serial.print(" ");
-  Serial.print(a2_hat,6);
-  Serial.print(" ");
-  Serial.println(b_hat,6);
+  if (count%50==0){
+    // Serial.print("  ");
+    Serial.print(h1,6);
+    Serial.print("  ");
+    Serial.print(h2,6);
+    Serial.print("  "); 
+    Serial.print(a1_hat,6);
+    Serial.print("  ");  
+    Serial.print(a2_hat,6);
+    Serial.print("  "); 
+    Serial.print(b_hat,6);
+    Serial.print("  ");  
 
+    Serial.println(u);
+    // Serial.println("  ");
+  }
+  
   //finally we create the dynamics for reference model
   float xm1_dot=xm2;
   float xm2_dot=-k1*xm1-k2*xm2+k1*h2_desired;
@@ -136,8 +142,7 @@ float f_dot(float x)
     }
 }
 float projection(float x,float y,float x_max, float e){
-    float x_max=1;
-    float e=0.1;
+
     if (proj_fun(x,e,x_max)>0 && y*der_proj_fun(x,e,x_max)>0){
         return y*(1-proj_fun(x,e,x_max));
     }
