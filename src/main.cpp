@@ -22,11 +22,11 @@ void setup() {
   LoadCell_1.setCalFactor(calibrationValue_1);
   LoadCell_2.setCalFactor(calibrationValue_2);
   initPump();
-  drivePump(filter(7));
+  // drivePump(filter(7));
   Serial.println("Start : ");
-  delay(10000);
+  // delay(10000);
   Serial.println("10 sec");
-  delay(10000);
+  // delay(10000);
   // Serial.println("Done");
   time0=millis();
 }
@@ -92,6 +92,12 @@ void loop() {
     Serial.print("  ");
     Serial.print(h2,6);
     Serial.print("  ");  
+    Serial.print(theta1);
+    Serial.print("  ");
+    Serial.print(theta2);
+    Serial.print("  ");
+    Serial.print(theta3);
+    Serial.print("  ");
     Serial.println(u);
     // Serial.println("  ");
   }

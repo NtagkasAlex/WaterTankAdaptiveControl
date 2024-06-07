@@ -30,10 +30,10 @@ float u_max=14;
 
 float g=9.81;
 
-float am1 = 0.1;
-float am0 = 0.01;
+float am1 = 0.01;
+float am0 = 0.0001;
 
-float gamma = 100;  //100
+float gamma = 10;  //100
 
 float r = 0.12;  //0.1
 
