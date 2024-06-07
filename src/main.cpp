@@ -26,15 +26,15 @@ void setup() {
    drivePump(filter(7));
   Serial.println("Start : ");
   delay(10000);
-  Serial.println("10 sec");
-  delay(10000);
+  // Serial.println("10 sec");
+  // delay(10000);
   // Serial.println("Done");
   time0=millis();
 }
 int count=0;
 void loop() {
   // Serial.print("8");
-  count+=1;
+  // count+=1;
   unsigned int t=millis()-time0;
   float  t_sec=(float) t/1000;
   LoadCell_1.update();
@@ -50,10 +50,10 @@ void loop() {
   // float P[2][2]={{5.06,0.001},
   //               {0.001,0.01}
   //               };
-  float p1=10.075;
-  float p2=0.0025;
-  float p3=0.0025;
-  float p4=0.0503;
+  float p1=1.6683;
+  float p2=0.0006;
+  float p3=0.0006;
+  float p4=0.0017;
 
                 
   //initialize B' matrix
@@ -104,9 +104,9 @@ void loop() {
     Serial.print("  "); 
     Serial.print(a1_hat,6);
     Serial.print("  ");  
-    Serial.print(a2_hat,6);
+    Serial.print(a2_hat,10);
     Serial.print("  "); 
-    Serial.print(b_hat,6);
+    Serial.print(b_hat/1000,10);
     Serial.print("  ");  
 
     Serial.println(u);
@@ -143,11 +143,11 @@ float f_dot(float x)
 }
 
 float projection(float x,float y,float xmax,float e){
-float f=-(x*x-xmax^2)/(e*xmax^2);
-float df=-2*x/(e*xmax^2);
-if (f>0 && y*df>0){
+  float f=-(x*x-xmax*xmax)/(e*xmax*xmax);
+  float df=-2*x/(e*xmax*xmax);
+  if (f>0 && y*df>0){
     return y-df*df*y*f/(df*df);
-}
+  }
 else{
     return y;
 }

@@ -13,7 +13,7 @@ float TareOffeset_1=8219669; // calibration
 unsigned int time0;
 float  f(float x);
 float f_dot(float x);
-float projection(float x,float y,float xmax,float e)
+float projection(float x,float y,float xmax,float e);
 // float projection(float x, float y);
 // float proj_fun(float x, float e, float x_max);
 // float der_proj_fun(float x, float e, float x_max);
