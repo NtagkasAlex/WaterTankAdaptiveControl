@@ -1,7 +1,7 @@
 #include "Arduino.h"
 #include "definitions.h"
 //SECTION Definitions 
-#define LOOP_TIME 0.02
+#define LOOP_TIME 0.001
 
 void printHeights(float h1,float h2);
 void setup() {
@@ -110,17 +110,23 @@ void loop() {
     Serial.print("  ");  
     Serial.print(b_dot,6);
     Serial.print("  ");  
-    Serial.print(b1,6);
+    Serial.print(xm2,6);  
+    Serial.print("  "); 
+    Serial.print(psi2);  
     Serial.print("  ");  
-    Serial.print(b2,6);
-    Serial.print("  ");  
-    Serial.print(b3,6);
-    Serial.print("  ");  
-    Serial.print(b4,6);
-    Serial.print("  ");  
-    Serial.print(b5,6);
-    Serial.print("  ");  
-    Serial.print(b6,6);
+ 
+
+    // Serial.print(b1,6);
+    // Serial.print("  ");  
+    // Serial.print(b2,6);
+    // Serial.print("  ");  
+    // Serial.print(b3,6);
+    // Serial.print("  ");  
+    // Serial.print(b4,6);
+    // Serial.print("  ");  
+    // Serial.print(b5,6);
+    // Serial.print("  ");  
+    // Serial.print(b6,6);
     Serial.print("  ");  
     Serial.println(u);
     // Serial.println("  ");
@@ -156,8 +162,8 @@ float f_dot(float x)
 }
 
 float projection(float x,float y,float xmax,float e){
-  Serial.print(" Y ");
-  Serial.print(y);
+  // Serial.print(" Y ");
+  // Serial.print(y);
   float f=-(x*x-xmax*xmax)/(e*xmax*xmax);
   float df=-2*x/(e*xmax*xmax);
   if (f>0 && y*df>0){
