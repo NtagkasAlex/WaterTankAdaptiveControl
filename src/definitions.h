@@ -28,9 +28,9 @@ float EulerIntegrator(float loop_time,float state_dot);
 float u_max=14;
 // SECTION Simulation Constants
 float g=9.81;
-float k2=1;
-float k1=5000;
-float constant=1e-3;
+float k2=3;
+float k1=50000;
+float constant=1e-6;
 float gamma1=constant;
 float gamma2=constant;
 float gamma_beta=constant;

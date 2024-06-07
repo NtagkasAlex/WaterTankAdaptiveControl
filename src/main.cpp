@@ -74,7 +74,14 @@ void loop() {
     Serial.print(h1,6);
     Serial.print("  ");
     Serial.print(h2,6);
+    Serial.print("  "); 
+    Serial.print(a1_hat,6);
     Serial.print("  ");  
+    Serial.print(a2_hat,6);
+    Serial.print("  "); 
+    Serial.print(p_hat,6);
+    Serial.print("  ");  
+
     Serial.println(u);
     // Serial.println("  ");
   }
