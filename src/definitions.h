@@ -31,8 +31,8 @@ float u_max=14;
 // SECTION Simulation Constants feedback linearization
 float g=9.81;
 float gamma=0.01;
-int k1=200;// //initialize gains k1 and k2 if those changed we need to recalculate the P matrix via matlab and lyap function
-int k2=10;
+int k1=900;// //initialize gains k1 and k2 if those changed we need to recalculate the P matrix via matlab and lyap function
+int k2=300;
 float a1_hat=1;
 float a2_hat=1;
 float b_hat=1;
