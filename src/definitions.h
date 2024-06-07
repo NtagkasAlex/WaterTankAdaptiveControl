@@ -26,24 +26,19 @@ void drivePump(float speed);
 float EulerIntegrator(float loop_time,float state_dot);
 
 float u_max=14;
-
-
 float g=9.81;
+float dt=1e-3;
+float am1 = 1e-2;
+float am0 = 1e-4;
 
-float am1 = 0.01;
-float am0 = 0.0001;
+float gamma = 10;
 
-float gamma = 10;  //100
+float r = 0.12;
 
-float r = 0.12;  //0.1
-
-float yp = 0;  //
+float yp = 0.096 - r;  //
 float yp_dot = 0;
-//float yp_ddot = 0;  //
 
-// float h2 = 0;  //
-
-float ym = 0.1;  //
+float ym = 0.096 - r;  //
 float ym_dot = 0;
 float ym_ddot = 0;
 
@@ -71,3 +66,5 @@ float theta3 = 0;
 float theta3_dot = 0;
 
 float u = 0;
+
+float ud = 15.1047;

@@ -22,11 +22,11 @@ void setup() {
   LoadCell_1.setCalFactor(calibrationValue_1);
   LoadCell_2.setCalFactor(calibrationValue_2);
   initPump();
-  // drivePump(filter(7));
+  drivePump(filter(7));
   Serial.println("Start : ");
-  // delay(10000);
+  delay(10000);
   Serial.println("10 sec");
-  // delay(10000);
+  delay(10000);
   // Serial.println("Done");
   time0=millis();
 }
@@ -46,39 +46,38 @@ void loop() {
     h2=0.0001;
   }
   
-  yp = h2;//plant dynamics
+  yp_dot = (h2 - r - yp) / dt;  //strictly before the following line
+  yp = h2 - r;                  //plant
 
-  yp_dot = (h2 - yp) / LOOP_TIME;  //before or after the following line?(probably no difference longterm)
-                    
   //reference model
-  ym_ddot = -am1 * ym_dot - am0 * ym + am0 * r;  //am0=bm
-  ym_dot +=EulerIntegrator(LOOP_TIME,ym_ddot);         // new ym_dot                          euler
-  ym +=EulerIntegrator(LOOP_TIME,ym_dot);                        // new ym                              euler
+  ym_ddot = -am1 * ym_dot - am0 * ym;
+  ym_dot +=EulerIntegrator(LOOP_TIME,ym_ddot);  // new ym_dot
+  ym +=EulerIntegrator(LOOP_TIME,ym_dot);           // new ym
 
   e = yp - ym;  //new error
 
-  g1_ddot = -am1 * g1_dot - am0 * g1 + am0 * r;
-  g1_dot +=EulerIntegrator(LOOP_TIME,g1_ddot); //new g1_dot                                         euler
-  g1 +=EulerIntegrator(LOOP_TIME,g1_dot);// new g1                                            euler
+  g1_ddot = -am1 * g1_dot - am0 * g1;
+  g1_dot +=EulerIntegrator(LOOP_TIME,g1_ddot); //new g1_dot
+  g1 +=EulerIntegrator(LOOP_TIME,g1_dot);            // new g1
 
   g2_ddot = -am1 * g2_dot - am0 * g2 + am0 * yp;
-  g2_dot +=EulerIntegrator(LOOP_TIME,g2_ddot); //new g2_dot                                         euler
-  g2 +=EulerIntegrator(LOOP_TIME,g2_dot);          // new g2                                            euler
+  g2_dot +=EulerIntegrator(LOOP_TIME,g2_ddot);  //new g2_dot
+  g2 +=EulerIntegrator(LOOP_TIME,g2_dot);           // new g2
 
-  g3_ddot = -am1 * g3_dot - am0 * g3 + am0 * yp_dot;  //                              derivative!
-  g3_dot +=EulerIntegrator(LOOP_TIME,g3_ddot);               //new g3_dot                      euler
-  g3 +=EulerIntegrator(LOOP_TIME,g3_dot);                              // new g3                         euler
+  g3_ddot = -am1 * g3_dot - am0 * g3 + am0 * yp_dot;  //                              yp derivative
+  g3_dot +=EulerIntegrator(LOOP_TIME,g3_ddot);                     //new g3_dot
+  g3 +=EulerIntegrator(LOOP_TIME,g3_dot);                         // new g3
 
   //mit rule
   theta1_dot = -gamma * g1 * e;
   theta2_dot = gamma * g2 * e;
   theta3_dot = gamma * g3 * e;
 
-  theta1 +=EulerIntegrator(LOOP_TIME,theta1_dot);//new theta1                                     euler
-  theta2 +=EulerIntegrator(LOOP_TIME,theta2_dot);  // new theta2                                     euler
-  theta3 +=EulerIntegrator(LOOP_TIME,theta3_dot);  // new theta2                                     euler
+  theta1 +=EulerIntegrator(LOOP_TIME,theta1_dot); // new theta1
+  theta2 +=EulerIntegrator(LOOP_TIME,theta2_dot);  // new theta2
+  theta3 +=EulerIntegrator(LOOP_TIME,theta3_dot);  // new theta2
 
-  u = theta1 * r - theta2 * yp - theta3 * yp_dot;  //control law                      derivative!
+  u = -theta2 * yp - theta3 * yp_dot + ud;  //control law                      yp derivative  //control law                      derivative!
 
   // Serial.print(u);
   if (u<=0)
