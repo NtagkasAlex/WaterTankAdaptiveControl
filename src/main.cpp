@@ -81,7 +81,7 @@ void loop() {
   //adaptation law for parameters 
   float a1_dot=gamma*projection(a1_hat,(b1*p1+b4*p3)*e1 + (b1*p2+b4*p4)*e2,2e-4,2e-7);
   float a2_dot=gamma*(b2*p1+b5*p3)*e1 + (b2*p2+b5*p4)*e2;
-  float b_dot=gamma*projection (b_hat, (b3*p1+b6*p3)*e1 + (b3*p2+b6*p4)*e2,2.8e-6,2e-11);
+  float b_dot=gamma*projection (b_hat, ((b3*p1+b6*p3)*e1 + (b3*p2+b6*p4)*e2)/gamma,2.8e-1,2e-2);
 
   //here we add desired height
   float h2_desired=0.12;
@@ -104,11 +104,24 @@ void loop() {
     Serial.print("  "); 
     Serial.print(a1_hat,6);
     Serial.print("  ");  
-    Serial.print(a2_hat,10);
+    Serial.print(a2_hat,6);
     Serial.print("  "); 
-    Serial.print(b_hat/1000,10);
+    Serial.print(b_hat,6);
     Serial.print("  ");  
-
+    Serial.print(b_dot,6);
+    Serial.print("  ");  
+    Serial.print(b1,6);
+    Serial.print("  ");  
+    Serial.print(b2,6);
+    Serial.print("  ");  
+    Serial.print(b3,6);
+    Serial.print("  ");  
+    Serial.print(b4,6);
+    Serial.print("  ");  
+    Serial.print(b5,6);
+    Serial.print("  ");  
+    Serial.print(b6,6);
+    Serial.print("  ");  
     Serial.println(u);
     // Serial.println("  ");
   }
@@ -143,6 +156,8 @@ float f_dot(float x)
 }
 
 float projection(float x,float y,float xmax,float e){
+  Serial.print(" Y ");
+  Serial.print(y);
   float f=-(x*x-xmax*xmax)/(e*xmax*xmax);
   float df=-2*x/(e*xmax*xmax);
   if (f>0 && y*df>0){
