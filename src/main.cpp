@@ -78,9 +78,9 @@ void loop() {
   float e2=psi2-xm2;
 
   //adaptation law for parameters 
-  float a1_dot=gamma*projection(a1_hat,(b1*p1+b4*p3)*e1 + (b1*p2+b4*p4)*e2);
-  float a2_dot=gamma*projection(a2_hat,(b2*p1+b5*p3)*e1 + (b2*p2+b5*p4)*e2);
-  float b_dot=gamma*projection (b_hat, (b3*p1+b6*p3)*e1 + (b3*p2+b6*p4)*e2);
+  float a1_dot=gamma*projection(a1_hat,(b1*p1+b4*p3)*e1 + (b1*p2+b4*p4)*e2,2e-4,2e-7);
+  float a2_dot=gamma*(b2*p1+b5*p3)*e1 + (b2*p2+b5*p4)*e2;
+  float b_dot=gamma*projection (b_hat, (b3*p1+b6*p3)*e1 + (b3*p2+b6*p4)*e2,2.8e-6,2e-11);
 
   //here we add desired height
   float h2_desired=0.12;
@@ -135,7 +135,7 @@ float f_dot(float x)
       return sqrt(2*g)/(2*sqrt(x));
     }
 }
-float projection(float x,float y){
+float projection(float x,float y,float x_max, float e){
     float x_max=1;
     float e=0.1;
     if (proj_fun(x,e,x_max)>0 && y*der_proj_fun(x,e,x_max)>0){
