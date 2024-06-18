@@ -46,8 +46,8 @@ void loop() {
     h2=0.0001;
   }
   
-  yp_dot = (h2 - r - yp) / dt;  //strictly before the following line
-  yp = h2 - r;                  //plant
+  yp_dot = (h2 - r0 - yp) / dt;  //strictly before the following line
+  yp = h2 - r0;                  //plant
 
   //reference model
   ym_ddot = -am1 * ym_dot - am0 * ym;
@@ -121,7 +121,7 @@ float f_dot(float x)
         return 10000;
     }
     else{
-      return sqrt(2*g)/(2*sqrt(x));
+      return sqrt(g/2*x));
     }
 }
 float projection(float x,float y){
@@ -181,4 +181,3 @@ float EulerIntegrator(float loop_time, float state_dot)
 {
     return loop_time*state_dot;
 }
-
