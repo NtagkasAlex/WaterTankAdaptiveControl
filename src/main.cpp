@@ -50,23 +50,23 @@ void loop() {
   yp = h2 - r0;                  //plant
 
   //reference model
-  ym_ddot = -am1 * ym_dot - am0 * ym;
+  ym_ddot = -am1 * ym_dot - am0 * ym + am0 * r_tilde;
   ym_dot +=EulerIntegrator(LOOP_TIME,ym_ddot);  // new ym_dot
-  ym +=EulerIntegrator(LOOP_TIME,ym_dot);           // new ym
+  ym +=EulerIntegrator(LOOP_TIME,ym_dot);       // new ym
 
   e = yp - ym;  //new error
 
-  g1_ddot = -am1 * g1_dot - am0 * g1;
+  g1_ddot = -am1 * g1_dot - am0 * g1 + am0 * r_tilde;
   g1_dot +=EulerIntegrator(LOOP_TIME,g1_ddot); //new g1_dot
-  g1 +=EulerIntegrator(LOOP_TIME,g1_dot);            // new g1
+  g1 +=EulerIntegrator(LOOP_TIME,g1_dot);      // new g1
 
   g2_ddot = -am1 * g2_dot - am0 * g2 + am0 * yp;
   g2_dot +=EulerIntegrator(LOOP_TIME,g2_ddot);  //new g2_dot
-  g2 +=EulerIntegrator(LOOP_TIME,g2_dot);           // new g2
+  g2 +=EulerIntegrator(LOOP_TIME,g2_dot);       // new g2
 
   g3_ddot = -am1 * g3_dot - am0 * g3 + am0 * yp_dot;  //                              yp derivative
-  g3_dot +=EulerIntegrator(LOOP_TIME,g3_ddot);                     //new g3_dot
-  g3 +=EulerIntegrator(LOOP_TIME,g3_dot);                         // new g3
+  g3_dot +=EulerIntegrator(LOOP_TIME,g3_ddot);        //new g3_dot
+  g3 +=EulerIntegrator(LOOP_TIME,g3_dot);             // new g3
 
   //mit rule
   theta1_dot = -gamma * g1 * e;
@@ -75,9 +75,9 @@ void loop() {
 
   theta1 +=EulerIntegrator(LOOP_TIME,theta1_dot); // new theta1
   theta2 +=EulerIntegrator(LOOP_TIME,theta2_dot);  // new theta2
-  theta3 +=EulerIntegrator(LOOP_TIME,theta3_dot);  // new theta2
+  theta3 +=EulerIntegrator(LOOP_TIME,theta3_dot);  // new theta3
 
-  u = -theta2 * yp - theta3 * yp_dot + ud;  //control law                      yp derivative  //control law                      derivative!
+  u = theta1 * r_tilde - theta2 * yp - theta3 * yp_dot + ud;  //control law                      yp derivative  //control law                      derivative!
 
   // Serial.print(u);
   if (u<=0)
@@ -105,7 +105,6 @@ void loop() {
   // a1_hat+=EulerIntegrator(LOOP_TIME,theta1_dot);
   // a2_hat+=EulerIntegrator(LOOP_TIME,a2_dot);
   // p_hat+=EulerIntegrator(LOOP_TIME,p_dot);
-
 
   delay(LOOP_TIME*1000);
 }
