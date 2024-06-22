@@ -15,8 +15,10 @@ void setup() {
 
   LoadCell_1.tare();
   LoadCell_2.tare();
+  
   //Serial.println(LoadCell_1.getTareOffset());
   //Serial.println(LoadCell_2.getTareOffset());
+  
   LoadCell_1.setTareOffset(TareOffeset_1);
   LoadCell_2.setTareOffset(TareOffeset_2);
 
@@ -53,29 +55,29 @@ void loop() {
   }
   
   if (h2 <= 0) { 
-    h2 = 1e-4;
+    h2 = 1e-5;
   }
   
-  yp_dot = (h2 - r0 - yp) / dt;  //strictly before the following line
-  yp = h2 - r0;                  //plant
+  yp_dot = (h2 - r0 - yp) / LOOP_TIME;  //strictly before the following line
+  yp = h2 - r0;  //plant
 
   ym_ddot = -am1 * ym_dot - am0 * ym + am0 * r_tilde;  //reference model
-  ym_dot += EulerIntegrator(LOOP_TIME, ym_ddot);       //new ym_dot
-  ym += EulerIntegrator(LOOP_TIME, ym_dot);            //new ym
+  ym_dot += EulerIntegrator(LOOP_TIME, ym_ddot);  //new ym_dot
+  ym += EulerIntegrator(LOOP_TIME, ym_dot);  //new ym
 
   e = yp - ym;  //new error
 
   g1_ddot = -am1 * g1_dot - am0 * g1 + am0 * r_tilde;
-  g1_dot += EulerIntegrator(LOOP_TIME, g1_ddot); //new g1_dot
-  g1 += EulerIntegrator(LOOP_TIME, g1_dot);      //new g1
+  g1_dot += EulerIntegrator(LOOP_TIME, g1_ddot);  //new g1_dot
+  g1 += EulerIntegrator(LOOP_TIME, g1_dot);  //new g1
 
   g2_ddot = -am1 * g2_dot - am0 * g2 + am0 * yp;
   g2_dot += EulerIntegrator(LOOP_TIME, g2_ddot);  //new g2_dot
-  g2 += EulerIntegrator(LOOP_TIME, g2_dot);       //new g2
+  g2 += EulerIntegrator(LOOP_TIME, g2_dot);  //new g2
 
   g3_ddot = -am1 * g3_dot - am0 * g3 + am0 * yp_dot;  //                      !yp_dot
-  g3_dot += EulerIntegrator(LOOP_TIME, g3_ddot);      //new g3_dot
-  g3 += EulerIntegrator(LOOP_TIME, g3_dot);           //new g3
+  g3_dot += EulerIntegrator(LOOP_TIME, g3_ddot);  //new g3_dot
+  g3 += EulerIntegrator(LOOP_TIME, g3_dot);  //new g3
 
   //mit rule
   theta1_dot = -gamma * g1 * e;
@@ -136,9 +138,9 @@ int filter(float u) {
 float Scale2Height(float weight) {
     float r = 3.75;  //radius of base in cm
     float A = M_PI * r * r;  //base area in cm^2
-    float rho = 1.;  //density of water in g/cm^3
+    float rho = 1;  //density of water in g/cm^3
     float h = weight / (rho * A);  //in cm
-    return h / 100.;  //in meters
+    return h / 100;  //in meters
 }
 
 void initPump() {
