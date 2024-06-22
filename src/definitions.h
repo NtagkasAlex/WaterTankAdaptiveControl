@@ -2,6 +2,7 @@
 
 HX711_ADC LoadCell_2(2, 3);  //HX711 1
 HX711_ADC LoadCell_1(4, 5);  //HX711 2
+
 float calibrationValue_2 = 717.37;  //calibration value load cell 1
 float calibrationValue_1 = -732.42;  //calibration value load cell 2
 
@@ -27,7 +28,7 @@ float EulerIntegrator(float loop_time, float state_dot);
 
 float u_max = 14;
 
-//SECTION Simulation Constants
+//SECTION Simulation constants
 float g = 9.81;
 float k2 = 3;
 float k1 = 50000;
@@ -36,9 +37,9 @@ float gamma1 = constant;
 float gamma2 = constant;
 float gamma_beta = constant;
 
-float h2d = 0.12;  //in Metres
+float h2d = 0.12;  //(m)
 
-//SECTION - Initialazation
+//SECTION - Initialization
 float a1_hat = 0.1;
 float a2_hat = 0.1;
 float p_hat = 0.1;
