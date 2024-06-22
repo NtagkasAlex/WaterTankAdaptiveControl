@@ -26,8 +26,6 @@ float u_max = 14;
 float am0 = 1e-4;
 float am1 = 1e-2;
 
-float gamma = 1e3;
-
 float r = 0.1;  //
 float r0 = 0.096;  //
 float r_tilde = r - r0;
@@ -61,6 +59,8 @@ float theta2_dot = 0;
 
 float theta3 = 0;
 float theta3_dot = 0;
+
+float gamma = 1e3;
 
 float u = 0;
 float u0 = 13.5101;  //matlab
