@@ -2,6 +2,7 @@
 
 HX711_ADC LoadCell_2(2, 3);  //HX711 1
 HX711_ADC LoadCell_1(4, 5);  //HX711 2
+
 float calibrationValue_2 = 717.37;  //calibration value load cell 1
 float calibrationValue_1 = -732.42;  //calibration value load cell 2
 
