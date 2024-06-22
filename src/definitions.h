@@ -9,7 +9,7 @@ float TareOffeset_2 = 8516111; //calibration value load cell 1
 float TareOffeset_1 = 8219669; //calibration 
  
 unsigned int time0;
-float  f(float x);
+float f(float x);
 float f_dot(float x);
 float projection(float x, float y, float xmax, float e);
 //float projection(float x, float y);
