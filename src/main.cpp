@@ -58,13 +58,13 @@ void loop() {
   }
   
   float e2 = h2 - h2d;
-  float h1d = 1 / (a1_hat * a1_hat * 2 * g) * pow((a2_hat * f(h2) - k2 * e2), 2);
+  float h1d = 1. / (a1_hat * a1_hat * 2. * g) * pow((a2_hat * f(h2) - k2 * e2), 2.);
 
   float e1 = h1 - h1d;
   float b1 = e2 * a1_hat * f(h1) - e2 * a2_hat * f(h2);
-  float b2 = 2 / (pow(a1_hat, 3) * 2 * g) * pow((a2_hat * f(h2) - k2 * e2), 2);
-  float b3 = 2 / (a1_hat * a1_hat * 2 * g) * (a2_hat * f(h2) - k2 * e2) * f(h2);
-  float b4 = 2 / (a1_hat * a1_hat * 2 * g) * (a2_hat * f(h2) - k2 * e2) * (a2_hat * f_dot(h2) - k2);
+  float b2 = 2. / (pow(a1_hat, 3) * 2. * g) * pow((a2_hat * f(h2) - k2 * e2), 2);
+  float b3 = 2. / (a1_hat * a1_hat * 2. * g) * (a2_hat * f(h2) - k2 * e2) * f(h2);
+  float b4 = 2. / (a1_hat * a1_hat * 2. * g) * (a2_hat * f(h2) - k2 * e2) * (a2_hat * f_dot(h2) - k2);
   
   float a1_dot = gamma1 * projection(a1_hat, (e2 - e1 * b4 - e1) * f(h1));
   float a2_dot = gamma2 * (-e2 + e1 * b4) * f(h2);
@@ -155,7 +155,7 @@ void printHeights(float h1, float h2) {
 int filter(float u) {
   if (u <= 5)
     return 0;
-  return 255. * (u - 5.) / (u_max - 5.);
+  return 255 * (u - 5) / (u_max - 5);
 }
 
 float Scale2Height(float weight) {
