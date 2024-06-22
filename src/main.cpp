@@ -4,6 +4,7 @@
 #define LOOP_TIME 1e-3
 
 void printHeights(float h1, float h2);
+
 void setup() {
   Serial.begin(9600);
   Serial.println();
@@ -26,14 +27,16 @@ void setup() {
   
   initPump();
   drivePump(filter(7));
-  Serial.println("Start : ");
+  Serial.println("Start: ");
   delay(10000);
   //Serial.println("10 sec");
   //delay(10000);
   //Serial.println("Done");
   time0 = millis();
 }
+
 int count = 0;
+
 void loop() {
   //Serial.print("8");
   //count += 1;
@@ -146,7 +149,7 @@ void loop() {
   xm1 += EulerIntegrator(LOOP_TIME, xm1_dot);
   xm2 += EulerIntegrator(LOOP_TIME, xm2_dot);
 
-  delay(LOOP_TIME*1000);
+  delay(LOOP_TIME * 1000);
 }
 
 float f(float x) {
@@ -176,7 +179,6 @@ else {
 }
 
 //float projection(float x, float y, float x_max, float e) {
-
 //    if (proj_fun(x, e, x_max) > 0 && y * der_proj_fun(x, e, x_max) > 0) {
 //        return y * (1 - proj_fun(x, e, x_max));
 //    }
@@ -198,20 +200,20 @@ void printHeights(float h1, float h2) {
   Serial.println(h2 * 100., 6);
 }
 
-//Somehow filter the u of the controler to feed it to the pump
+//Somehow filter u to feed it to the pump
 int filter(float u) {
   if (u <= 5) {
     return 0;
   }
-  return 255.*(u - 5.) / (u_max - 5);
+  return 255 * (u - 5) / (u_max - 5);
 }
 
 float Scale2Height(float weight) {
-    float r = 3.75;  //Radius of base in cm
-    float A = M_PI * r * r;  //Base Surface in cm^2f
-    float rho = 1;  // density of water in g/cm^3
-    float h = weight / (rho * A);  //in cm
-    return h / 100.;  //in meters
+    float r = 3.75;  //radius of base (cm)
+    float A = M_PI * r * r;  //base surface (cm^2)
+    float rho = 1;  //density of water (g/cm^3)
+    float h = weight / (rho * A);  //(cm)
+    return h / 100.;  //(m)
 }
 
 void initPump() {
