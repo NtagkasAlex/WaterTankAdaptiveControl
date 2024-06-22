@@ -23,8 +23,6 @@ float EulerIntegrator(float loop_time, float state_dot);
 
 float u_max = 14;
 
-float dt = 1e-3;
-
 float am0 = 1e-4;
 float am1 = 1e-2;
 
@@ -66,4 +64,3 @@ float theta3_dot = 0;
 
 float u = 0;
 float u0 = 13.5101;  //matlab
-//float ud = 15.1047;  //matlab
