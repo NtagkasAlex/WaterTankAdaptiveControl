@@ -128,19 +128,20 @@ void printHeights(float h1, float h2) {
   Serial.print("  h2 in cm: ");
   Serial.println(h2 * 100., 6);
 }
+
 //Somehow filter u to feed it to the pump
 int filter(float u) {
   if (u <= 5)
     return 0;
-  return (255. / (u_max - 5.)) * (u - 5.);
+  return 255 * (u - 5) / (u_max - 5);
 }
 
 float Scale2Height(float weight) {
-    float r = 3.75;  //radius of base in cm
-    float A = M_PI * r * r;  //base area in cm^2
-    float rho = 1;  //density of water in g/cm^3
-    float h = weight / (rho * A);  //in cm
-    return h / 100.;  //in meters
+    float r = 3.75;  //radius of base (cm)
+    float A = M_PI * r * r;  //base area (cm^2)
+    float rho = 1;  //density of water (g/cm^3)
+    float h = weight / (rho * A);  //(cm)
+    return h / 100.;  //(m)
 }
 
 void initPump() {
