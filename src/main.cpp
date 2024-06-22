@@ -132,7 +132,7 @@ void printHeights(float h1, float h2) {
 int filter(float u) {
   if (u <= 5)
     return 0;
-  return (255 / (u_max - 5)) * (u - 5);
+  return (255. / (u_max - 5.)) * (u - 5.);
 }
 
 float Scale2Height(float weight) {
@@ -140,7 +140,7 @@ float Scale2Height(float weight) {
     float A = M_PI * r * r;  //base area in cm^2
     float rho = 1;  //density of water in g/cm^3
     float h = weight / (rho * A);  //in cm
-    return h / 100;  //in meters
+    return h / 100.;  //in meters
 }
 
 void initPump() {
